@@ -1,0 +1,1 @@
+export const STORAGE_KEY = "EDU_WIDGET_APP_STATE_V1";
