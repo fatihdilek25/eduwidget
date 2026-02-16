@@ -10,7 +10,8 @@ import HomeworkScreen from "../screens/HomeworkScreen";
 import AchievementScreen from "../screens/AchievementScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import LessonDetailScreen from "../screens/LessonDetailScreen";
-
+import ClassGroupsScreen from "../screens/ClassGroupsScreen";
+import CoursesScreen from "../screens/CoursesScreen";
 
 import { getState } from "../storage/repository";
 
@@ -23,13 +24,16 @@ export type RootStackParamList = {
   Achievement: undefined;
   Settings: undefined;
   LessonDetail: { scheduleItemId: string };
-
+  ClassGroups: undefined;
+  Courses: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
-  const [initialRoute, setInitialRoute] = useState<keyof RootStackParamList | null>(null);
+  const [initialRoute, setInitialRoute] = useState<
+    keyof RootStackParamList | null
+  >(null);
 
   useEffect(() => {
     (async () => {
@@ -48,19 +52,58 @@ export default function RootNavigator() {
 
   return (
     <Stack.Navigator initialRouteName={initialRoute}>
-      <Stack.Screen name="ModeSelect" component={ModeSelectScreen} options={{ title: "Mod Seçimi" }} />
-      <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Ana Sayfa" }} />
-      <Stack.Screen name="Schedule" component={ScheduleScreen} options={{ title: "Ders Programı" }} />
-      <Stack.Screen name="AddLesson" component={AddLessonScreen} options={{ title: "Ders Ekle" }} />
-      <Stack.Screen name="Homework" component={HomeworkScreen} options={{ title: "Ödevler" }} />
-      <Stack.Screen name="Achievement" component={AchievementScreen} options={{ title: "Kazanımlar" }} />
-      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: "Ayarlar" }} />
       <Stack.Screen
-  name="LessonDetail"
-  component={LessonDetailScreen}
-  options={{ presentation: "modal", title: "Ders Detayı" }}
-/>
+        name="ModeSelect"
+        component={ModeSelectScreen}
+        options={{ title: "Mod Seçimi" }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: "Ana Sayfa" }}
+      />
+      <Stack.Screen
+        name="Schedule"
+        component={ScheduleScreen}
+        options={{ title: "Ders Programı" }}
+      />
+      <Stack.Screen
+        name="AddLesson"
+        component={AddLessonScreen}
+        options={{ title: "Ders Ekle" }}
+      />
+      <Stack.Screen
+        name="Homework"
+        component={HomeworkScreen}
+        options={{ title: "Ödevler" }}
+      />
+      <Stack.Screen
+        name="Achievement"
+        component={AchievementScreen}
+        options={{ title: "Kazanımlar" }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ title: "Ayarlar" }}
+      />
+      <Stack.Screen
+        name="ClassGroups"
+        component={ClassGroupsScreen}
+        options={{ title: "Sınıflarım" }}
+      />
+      <Stack.Screen
+        name="Courses"
+        component={CoursesScreen}
+        options={{ title: "Dersler" }}
+      />
+      <Stack.Screen
+        name="LessonDetail"
+        component={LessonDetailScreen}
+        options={{ title: "Ders", presentation: "modal" }}
+      />
 
+      
     </Stack.Navigator>
   );
 }

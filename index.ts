@@ -1,8 +1,18 @@
-import { registerRootComponent } from 'expo';
+import "./src/widget/register";
 
-import App from './App';
+import { registerRootComponent } from "expo";
+import { AppRegistry } from "react-native";
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
+import App from "./App";
+import { name as appName } from "./app.json";
+
+import WidgetConfigurationScreen from "./src/widget/WidgetConfigurationScreen";
+
+// Normal uygulama entry
 registerRootComponent(App);
+
+// ✅ Widget "Düzenle" ekranı için gerekli kayıt
+AppRegistry.registerComponent("RNWidgetConfigurationScreen", () => WidgetConfigurationScreen);
+
+// (opsiyonel ama güvenli) appName register: bazı ortamlarda faydalı
+AppRegistry.registerComponent(appName, () => App);

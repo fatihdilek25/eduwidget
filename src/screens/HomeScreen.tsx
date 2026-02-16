@@ -83,6 +83,11 @@ function HomeScreen({ navigation }: any) {
         <PrimaryButton title="Ayarlar" variant="secondary" onPress={() => navigation.navigate("Settings")} />
         <View style={{ height: 18 }} />
         <PrimaryButton title="Widget’ı Şimdi Güncelle" variant="secondary" onPress={updateWidgetNow} />
+      <PrimaryButton title="Sınıflarım" variant="secondary" onPress={() => navigation.navigate("ClassGroups")} />
+<View style={{ height: 10 }} />
+<PrimaryButton title="Dersler" variant="secondary" onPress={() => navigation.navigate("Courses")} />
+<View style={{ height: 10 }} />
+
       </View>
     </ScrollView>
   );

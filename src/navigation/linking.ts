@@ -10,6 +10,7 @@ export const linking = {
       AddLesson: "add-lesson",
       Homework: "homework",
       Achievement: "achievement",
+      LessonDetail: "lesson/:scheduleItemId",
     },
   },
 };

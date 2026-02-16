@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView, Modal } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  Modal,
+} from "react-native";
 
 import { theme } from "../ui/theme";
 import { Card } from "../ui/Card";
@@ -23,7 +30,13 @@ type PickerContext = {
 
 function courseLabel(c: Course) {
   const typeTag =
-    c.type === "dyk" ? " (DYK)" : c.type === "private" ? " (Özel)" : c.type === "study" ? " (Etüt)" : "";
+    c.type === "dyk"
+      ? " (DYK)"
+      : c.type === "private"
+        ? " (Özel)"
+        : c.type === "study"
+          ? " (Etüt)"
+          : "";
   return `${c.title}${typeTag}`;
 }
 
@@ -34,7 +47,10 @@ export default function ScheduleScreen() {
   const [dayIndex, setDayIndex] = useState<number>(getTodayDayIndex());
 
   // Kopyala/yapıştır buffer
-  const [clipboard, setClipboard] = useState<{ courseId: string; noteOverride?: string } | null>(null);
+  const [clipboard, setClipboard] = useState<{
+    courseId: string;
+    noteOverride?: string;
+  } | null>(null);
 
   // Ders seçme modalı
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -51,12 +67,17 @@ export default function ScheduleScreen() {
 
   const selectedClassGroup = useMemo(() => {
     if (!state?.selectedClassGroupId) return null;
-    return state.classGroups.find(cg => cg.id === state.selectedClassGroupId) ?? null;
+    return (
+      state.classGroups.find((cg) => cg.id === state.selectedClassGroupId) ??
+      null
+    );
   }, [state]);
 
   const coursesForSelectedClass = useMemo(() => {
     if (!state?.selectedClassGroupId) return [];
-    return state.courses.filter(c => c.classGroupId === state.selectedClassGroupId);
+    return state.courses.filter(
+      (c) => c.classGroupId === state.selectedClassGroupId,
+    );
   }, [state]);
 
   // Bu sınıfa ait scheduleItem’ları hızlı bulmak için map
@@ -65,7 +86,7 @@ export default function ScheduleScreen() {
     if (!state) return m;
 
     // seçili sınıfın courseId seti
-    const courseIds = new Set(coursesForSelectedClass.map(c => c.id));
+    const courseIds = new Set(coursesForSelectedClass.map((c) => c.id));
     for (const si of state.scheduleItems) {
       if (!courseIds.has(si.courseId)) continue;
       m.set(`${si.dayIndex}-${si.slotIndex}`, si);
@@ -87,14 +108,14 @@ export default function ScheduleScreen() {
     const key = `${dayIndex}-${slotIndex}`;
     const existing = scheduleMap.get(key);
 
-    await updateState(prev => {
+    await updateState((prev) => {
       // prev üzerinden çalış
       const next = { ...prev };
       const items = [...next.scheduleItems];
 
       if (existing) {
         // var olanı güncelle
-        const idx = items.findIndex(x => x.id === existing.id);
+        const idx = items.findIndex((x) => x.id === existing.id);
         if (idx >= 0) {
           items[idx] = { ...items[idx], courseId };
         }
@@ -118,11 +139,15 @@ export default function ScheduleScreen() {
   }
 
   async function clearSlot(day: number, slot: number) {
-    await updateState(prev => {
+    await updateState((prev) => {
       const next = { ...prev };
-      const courseIds = new Set(next.courses.filter(c => c.classGroupId === next.selectedClassGroupId).map(c => c.id));
+      const courseIds = new Set(
+        next.courses
+          .filter((c) => c.classGroupId === next.selectedClassGroupId)
+          .map((c) => c.id),
+      );
 
-      next.scheduleItems = next.scheduleItems.filter(si => {
+      next.scheduleItems = next.scheduleItems.filter((si) => {
         const belongsToSelectedClass = courseIds.has(si.courseId);
         if (!belongsToSelectedClass) return true;
         return !(si.dayIndex === day && si.slotIndex === slot);
@@ -147,18 +172,27 @@ export default function ScheduleScreen() {
   async function pasteIntoSlot(day: number, slot: number) {
     if (!clipboard) return;
 
-    await updateState(prev => {
+    await updateState((prev) => {
       const next = { ...prev };
 
       // seçili sınıfın courseId seti
-      const courseIds = new Set(next.courses.filter(c => c.classGroupId === next.selectedClassGroupId).map(c => c.id));
+      const courseIds = new Set(
+        next.courses
+          .filter((c) => c.classGroupId === next.selectedClassGroupId)
+          .map((c) => c.id),
+      );
 
       // hedefte varsa güncelle, yoksa ekle
       const items = [...next.scheduleItems];
-      const existing = items.find(si => courseIds.has(si.courseId) && si.dayIndex === day && si.slotIndex === slot);
+      const existing = items.find(
+        (si) =>
+          courseIds.has(si.courseId) &&
+          si.dayIndex === day &&
+          si.slotIndex === slot,
+      );
 
       if (existing) {
-        const idx = items.findIndex(x => x.id === existing.id);
+        const idx = items.findIndex((x) => x.id === existing.id);
         items[idx] = {
           ...items[idx],
           courseId: clipboard.courseId,
@@ -183,7 +217,12 @@ export default function ScheduleScreen() {
 
   if (!state) {
     return (
-      <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
         <Text>Yükleniyor…</Text>
       </View>
     );
@@ -193,11 +232,20 @@ export default function ScheduleScreen() {
     <View style={styles.container}>
       <Text style={styles.h1}>Ders Programı</Text>
       <Text style={styles.p}>
-        {selectedClassGroup ? `Sınıf: ${selectedClassGroup.label}` : "Sınıf seçilmedi"}
+        {selectedClassGroup
+          ? `Sınıf: ${selectedClassGroup.label}`
+          : "Sınıf seçilmedi"}
+      </Text>
+      <Text style={[styles.p, { marginTop: 4 }]}>
+        selectedClassGroupId: {String(state.selectedClassGroupId)}
       </Text>
 
       {/* Gün sekmeleri */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 12 }}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ marginTop: 12 }}
+      >
         <View style={{ flexDirection: "row", gap: 8 }}>
           {DAY_LABELS.map((lbl, idx) => {
             const active = idx === dayIndex;
@@ -208,12 +256,21 @@ export default function ScheduleScreen() {
                 style={[
                   styles.dayChip,
                   {
-                    backgroundColor: active ? theme.colors.text : theme.colors.card,
+                    backgroundColor: active
+                      ? theme.colors.text
+                      : theme.colors.card,
                     borderColor: theme.colors.border,
                   },
                 ]}
               >
-                <Text style={{ color: active ? "#fff" : theme.colors.text, fontWeight: "700" }}>{lbl}</Text>
+                <Text
+                  style={{
+                    color: active ? "#fff" : theme.colors.text,
+                    fontWeight: "700",
+                  }}
+                >
+                  {lbl}
+                </Text>
               </Pressable>
             );
           })}
@@ -234,11 +291,16 @@ export default function ScheduleScreen() {
 
       {/* Slot listesi */}
       <ScrollView style={{ marginTop: 12 }}>
-        {timeSlots.map(ts => {
+        {timeSlots.map((ts) => {
           const si = scheduleMap.get(`${dayIndex}-${ts.slotIndex}`);
-          const course = si ? coursesForSelectedClass.find(c => c.id === si.courseId) : undefined;
+          const course = si
+            ? coursesForSelectedClass.find((c) => c.id === si.courseId)
+            : undefined;
 
-          const title = course ? courseLabel(course) : "Boş";
+          const classLabel = selectedClassGroup?.label ?? "";
+          const title = course
+            ? `${classLabel ? classLabel + " • " : ""}${courseLabel(course)}`
+            : "Boş";
           const subtitle = `${ts.slotIndex}. ders • ${si?.timeOverride?.start ?? ts.start}–${si?.timeOverride?.end ?? ts.end}`;
 
           return (
@@ -292,21 +354,34 @@ export default function ScheduleScreen() {
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>Ders Seç</Text>
             <Text style={styles.modalSub}>
-              {selectedClassGroup ? selectedClassGroup.label : ""} • {DAY_LABELS[dayIndex]}
+              {selectedClassGroup ? selectedClassGroup.label : ""} •{" "}
+              {DAY_LABELS[dayIndex]}
               {pickerCtx ? ` • ${pickerCtx.slotIndex}. ders` : ""}
             </Text>
 
             <ScrollView style={{ marginTop: 12, maxHeight: 360 }}>
               {coursesForSelectedClass.length === 0 ? (
                 <Text style={{ color: theme.colors.subtext }}>
-                  Bu sınıf için henüz ders yok. (Bir sonraki adımda “Dersler” ekranı ekleyeceğiz.)
+                  Bu sınıf için henüz ders yok. (Bir sonraki adımda “Dersler”
+                  ekranı ekleyeceğiz.)
                 </Text>
               ) : (
-                coursesForSelectedClass.map(c => (
-                  <Pressable key={c.id} onPress={() => assignCourse(c.id)} style={styles.courseRow}>
-                    <Text style={{ fontWeight: "700", color: theme.colors.text }}>{courseLabel(c)}</Text>
+                coursesForSelectedClass.map((c) => (
+                  <Pressable
+                    key={c.id}
+                    onPress={() => assignCourse(c.id)}
+                    style={styles.courseRow}
+                  >
+                    <Text
+                      style={{ fontWeight: "700", color: theme.colors.text }}
+                    >
+                      {courseLabel(c)}
+                    </Text>
                     {!!c.defaultNote && (
-                      <Text style={{ marginTop: 6, color: theme.colors.subtext }} numberOfLines={2}>
+                      <Text
+                        style={{ marginTop: 6, color: theme.colors.subtext }}
+                        numberOfLines={2}
+                      >
                         {c.defaultNote}
                       </Text>
                     )}
@@ -342,7 +417,11 @@ export default function ScheduleScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: theme.colors.bg, padding: theme.spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.bg,
+    padding: theme.spacing.xl,
+  },
   h1: { fontSize: 24, fontWeight: "800", color: theme.colors.text },
   p: { marginTop: 6, color: theme.colors.subtext },
 

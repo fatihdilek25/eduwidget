@@ -1,33 +1,50 @@
 import React from "react";
 import type { WidgetTaskHandlerProps } from "react-native-android-widget";
 import { getState } from "../storage/repository";
-import { buildWidgetSummaryText } from "../domain/selectors";
+import { buildWidgetSummaryText, selectCurrentAndNextLesson } from "../domain/selectors";
 import { WidgetRoot } from "./WidgetRoot";
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
-  const state = await getState();
-  const { headline, subline } = buildWidgetSummaryText(state);
+  try {
+    const state = await getState();
 
-  switch (props.widgetAction) {
-    case "WIDGET_ADDED":
-    case "WIDGET_UPDATE":
-    case "WIDGET_RESIZED":
+    const { headline, subline } = buildWidgetSummaryText(state);
+    const { current, next } = selectCurrentAndNextLesson(state);
+    const targetId = current?.scheduleItem?.id ?? next?.scheduleItem?.id;
+    const clickUri = targetId ? `eduwidget://lesson/${targetId}` : undefined;
+
+    // ✅ DEBUG: handler çalışıyor mu?
+    const debugHeadline = `HANDLER OK ✅ ${new Date().toLocaleTimeString()}`;
+
+    switch (props.widgetAction) {
+      case "WIDGET_ADDED":
+      case "WIDGET_UPDATE":
+      case "WIDGET_RESIZED":
       props.renderWidget(
-  <WidgetRoot 
-    headline={headline} 
+  <WidgetRoot
+    headline={headline}
     subline={subline}
     version={String(Date.now())}
+    clickUri={clickUri}
   />
 );
 
-      break;
+        break;
 
-    case "WIDGET_CLICK":
-      // clickAction="OPEN_APP" olduğu için burada ek iş yapmak zorunda değilsin. :contentReference[oaicite:7]{index=7}
-      break;
+      case "WIDGET_CLICK":
+        break;
 
-    case "WIDGET_DELETED":
-    default:
-      break;
+      default:
+        break;
+    }
+  } catch (e: any) {
+    // ✅ Hata olursa bile ekranda yazı göster
+    props.renderWidget(
+      <WidgetRoot
+        headline="WIDGET ERROR ❌"
+        subline={String(e?.message ?? e)}
+        version={String(Date.now())}
+      />
+    );
   }
 }

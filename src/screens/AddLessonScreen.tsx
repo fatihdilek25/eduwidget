@@ -29,7 +29,10 @@ function AddLessonScreen({ navigation }: Props) {
       color: "blue",
     };
 
-    await updateState(prev => ({ ...prev, lessons: [...prev.lessons, lesson] }));
+    await updateState((prev) => ({
+      ...prev,
+      lessons: [...prev.lessons, lesson],
+    }));
     await updateEduWidget();
 
     navigation.goBack();

@@ -1,6 +1,5 @@
 import { registerWidgetTaskHandler } from "react-native-android-widget";
 import { widgetTaskHandler } from "./widget-task-handler";
 
-export function registerAndroidWidget() {
-  registerWidgetTaskHandler(widgetTaskHandler);
-}
+// ✅ Bu satır çok kritik: Widget arkaplan task’ını kaydeder
+registerWidgetTaskHandler(widgetTaskHandler);
