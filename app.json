@@ -6,14 +6,17 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+  "plugins": [
+  ["expo-build-properties", { "android": { "newArchEnabled": false } }]
+],
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fatihdilek.eduwidget"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,5 +34,6 @@
         "projectId": "478387f1-8d58-40b7-aefa-d8705050dfe4"
       }
     }
+    
   }
 }
