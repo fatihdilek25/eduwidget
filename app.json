@@ -26,6 +26,9 @@
           ]
         }
       ]
-    ]
+    ],
+    "ios": {
+      "bundleIdentifier": "com.fatihdilek.eduwidget"
+    }
   }
 }

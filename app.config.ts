@@ -11,6 +11,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-dev-client",
+    "expo-sharing",
     [
       "react-native-android-widget",
       {
@@ -19,7 +20,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             name: "SimpleWidget",
             label: "Günlük Dersler",
             minWidth: "320dp",
-            minHeight: "120dp",
+            minHeight: "64dp",
           },
           {
             name: "DetailWidget",
